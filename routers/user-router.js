@@ -36,7 +36,7 @@ router.post('/login', (req, res) => {
       });
   }); 
 
-router.get('/logout', restricted, (req, res) => {
+router.get('/logout', restricted,(req, res) => {
   req.session.destroy(err => {
     if(err) {
       res.json({ message: 'could not logout', error: err})
@@ -53,8 +53,8 @@ router.post('/register', async (req, res) => {
         const newUser = await Users.add({username: username, password: hash})
         res.status(200).json(newUser)
     }
-    catch(err) {
-        res.status(501).json({message: 'could not add user', error: err})
+    catch {
+        res.status(501).json({message: 'could not add user'})
     }
 })
 
