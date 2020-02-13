@@ -36,6 +36,16 @@ router.post('/login', (req, res) => {
       });
   }); 
 
+router.get('/logout', restricted, (req, res) => {
+  req.session.destroy(err => {
+    if(err) {
+      res.json({ message: 'could not logout', error: err})
+    }
+    else
+      res.status(200).json({message: `Logout success`})
+  })
+})
+
 router.post('/register', async (req, res) => {
     const {username, password} = req.body
     try {

@@ -5,12 +5,13 @@ const db = knex(knexConfig.development);
 module.exports = {
   getUsers,
   findBy,
-  findByUser,
+  // findByUser,
   add
 };
 
 function getUsers() {
-    return db('users');
+    return db('users')
+      .select('id', 'username')
 }
 
 function findBy(filter) {
@@ -18,21 +19,13 @@ function findBy(filter) {
       .select('id', 'username', 'password')
       .where(filter)
       .first()
-      .then(user=> {
-        console.log(user)
-        return user
-      })
 }
 
-function findByUser(username) {
-  return db('users')
-    .where('users.username', username)
-    .first()
-    .then(user=> {
-      console.log(user)
-      return user
-    })
-}
+// function findByUser(username) {
+//   return db('users')
+//     .where('users.username', username)
+//     .first()
+// }
 
 function add(user) {
     return db('users')
