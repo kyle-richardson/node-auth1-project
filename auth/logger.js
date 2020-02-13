@@ -1,6 +1,6 @@
 function logger(req, res, next) {
     console.log(
-      `[${new Date().toISOString()}] ${req.method} to ${req.url} from \norigin: ${req.get('origin')}`
+      `\n[${new Date().toISOString()}] ${req.method} to ${req.url} from \norigin: ${req.get('origin')}`
     );
     if(req.body.username)
         console.log(`body username: ${req.body.username}`)
