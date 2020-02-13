@@ -28,7 +28,7 @@ const restricted = (req, res, next) => {
             if(req.session.user.id == req.params.id) //the user logged in can only operate on their own account (delete, access content)
                 next()
             else
-                res.status(401).json({ message: 'You do not have priviledge to delete this user.'})
+                res.status(401).json({ message: 'You do not have priviledge to access or edit this user.'})
         }
         else 
             next()

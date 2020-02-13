@@ -4,9 +4,9 @@ function logger(req, res, next) {
     );
     if(req.body.username)
         console.log(`body username: ${req.body.username}`)
-    else if(req.headers.username)
+    if(req.headers.username)
         console.log(`header username: ${req.headers.username}`)
-    else if(req.session.user)
+    if(req.session.user)
         console.log(`session username: ${req.session.user.username}`)
   
     next();

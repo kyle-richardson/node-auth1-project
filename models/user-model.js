@@ -1,13 +1,14 @@
 const knex = require('knex');
 const knexConfig = require('../knexfile.js');
 const db = knex(knexConfig.development);
+const bcrypt = require('bcryptjs')
 
 module.exports = {
   getUsers,
   findBy,
-  // findByUser,
   add,
-  remove
+  remove,
+  update
 };
 
 function getUsers() {
@@ -21,12 +22,6 @@ function findBy(filter) {
       .where(filter)
       .first()
 }
-
-// function findByUser(username) {
-//   return db('users')
-//     .where('users.username', username)
-//     .first()
-// }
 
 function add(user) {
   return db('users')
@@ -48,4 +43,18 @@ async function remove(userId) {
       else return prom
     })
 }
+
+function update(id, changes) {
+  return db('users')
+    .where('users.id', id)
+    .update(changes)
+    .then(prom => {
+        if(prom>0)
+            return findBy({id});
+        else
+            return prom
+      });
+}
+
+
 

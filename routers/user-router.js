@@ -61,12 +61,39 @@ router.post('/register', async (req, res) => {
 router.delete('/users/:id', restricted, (req, res)=> {
   const {id} = req.params
   Users.remove(id)
-    .then(promise => {
-      res.status(200).json(promise)
+    .then(deletedUser => {
+      res.status(200).json(deletedUser)
     })
     .catch( err=> {
       res.status(501).json({message: 'could not delete user', error: err})
     })
 })
+
+router.put('/users/:id', restricted, verifyChanges, async (req, res)=> {
+  const {id} = req.params
+  const {username, password} = req.body
+  try {
+    let updatedUser
+    if(password) {
+      const newPass = await bcrypt.hashSync(password, 14)
+      updatedUser = await Users.update(id, {username: username, password: newPass})
+    }
+    else 
+      updatedUser = await Users.update(id, {username: username})
+    res.status(200).json(updatedUser)
+    
+  }
+  catch(err) {
+    res.status(500).json({message: 'could not update user info', error: err})
+  }
+})
+
+function verifyChanges(req, res, next) {
+  const changes = req.body
+  if(changes.username)
+    next()
+  else
+    res.status(400).json({ message: 'username field required to make changes (even if it is not changed)'})
+}
 
 module.exports = router
