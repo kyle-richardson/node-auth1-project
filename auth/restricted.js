@@ -1,7 +1,7 @@
-const Users = require('../models/user-model.js');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken')
-const {jwtSecret} = require('../auth/secrets')
+// const Users = require('../models/user-model.js');
+// const bcrypt = require('bcryptjs');
+// const jwt = require('jsonwebtoken')
+// const {jwtSecret} = require('../auth/secrets')
 
 const restricted = (req, res, next) => {
 
@@ -26,7 +26,7 @@ const restricted = (req, res, next) => {
     /*PART 2 MVP*/
 
     if(req.session && req.session.user)
-        if(req.params.id) {
+        if(req.params. id) {
             if(req.session.user.id == req.params.id) //the user logged in can only operate on their own account (delete, access content)
                 next()
             else
