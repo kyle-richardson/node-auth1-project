@@ -11,4 +11,8 @@ server.use(express.json());
 server.use('/api', UserRouter)
 server.use('/api/restricted', restricted)
 
+server.get('/', (res,req) => {
+    res.send('API working')
+})
+
 module.exports = server;

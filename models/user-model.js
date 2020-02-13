@@ -5,6 +5,7 @@ const db = knex(knexConfig.development);
 module.exports = {
   getUsers,
   findBy,
+  findByUser,
   add
 };
 
@@ -16,6 +17,21 @@ function findBy(filter) {
     return db('users')
       .select('id', 'username', 'password')
       .where(filter)
+      .first()
+      .then(user=> {
+        console.log(user)
+        return user
+      })
+}
+
+function findByUser(username) {
+  return db('users')
+    .where('users.username', username)
+    .first()
+    .then(user=> {
+      console.log(user)
+      return user
+    })
 }
 
 function add(user) {
