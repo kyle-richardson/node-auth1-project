@@ -1,8 +1,8 @@
 const express = require('express');
 
-const Users = require('./user-model.js');
+const Users = require('../models/user-model.js');
 const bcrypt = require('bcryptjs')
-const restricted = require('./auth/restricted')
+const restricted = require('../auth/restricted')
 
 const router = express.Router();
 
@@ -16,8 +16,8 @@ router.get('/users', restricted, async (req, res) => {
     }
   });
 
-server.post('/login', (req, res) => {
-    let { username, password } = req.body;
+router.post('/login', (req, res) => {
+    const { username, password } = req.body;
   
     Users.findBy({username})
       .first()
@@ -32,5 +32,17 @@ server.post('/login', (req, res) => {
         res.status(500).json(error);
       });
   }); 
+
+router.post('/register', async (req, res) => {
+    const {username, password} = req.body
+    try {
+        const hash = await bcrypt.hashSync(password, 14)
+        const newUser = await Users.add({username: username, password: hash})
+        res.status(200).json(newUser)
+    }
+    catch(err) {
+        res.status(501).json({message: 'could not add user', error: err})
+    }
+})
 
 module.exports = router

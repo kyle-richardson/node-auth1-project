@@ -1,4 +1,4 @@
-const Users = require('../models/users-model.js');
+const Users = require('../models/user-model.js');
 const bcrypt = require('bcryptjs');
 
 module.exports = (req, res, next) => {
@@ -12,9 +12,9 @@ module.exports = (req, res, next) => {
                 if (_user && bcrypt.compareSync(password, _user.password)) {
                     next()
                 } else {
-                    res.status(401).json({ messege: "Invalid Credentials" })
+                    res.status(401).json({ message: "Invalid Credentials" })
                 }
             })
-            .catch((err) => { res.status(500).json({ messege: err }) })
+            .catch((err) => { res.status(500).json({ message: err }) })
     }
 }
