@@ -1,5 +1,7 @@
 const Users = require('../models/user-model.js');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken')
+const {jwtSecret} = require('../auth/secrets')
 
 const restricted = (req, res, next) => {
 
@@ -34,6 +36,25 @@ const restricted = (req, res, next) => {
             next()
     else
         res.status(401).json({ message: "You shall not pass!" })
+
+    /* Token authorization */
+
+    // const token = req.headers.authorization
+    // if(token) {
+    //     jwt.verify(token, jwtSecret, (err, decodedToken)=> {
+    //         if(err) {
+    //             res.status(401).json({message: 'authorization failed.  Token has been changed'})
+    //         }
+    //         else {
+    //             next()
+    //         }
+    //     })
+    // }
+    // else
+    //     res.status(401).json({message: 'authorization failed. No token found'})
+        
+        
+    
 }
 
 module.exports = restricted

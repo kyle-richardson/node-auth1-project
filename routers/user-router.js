@@ -3,6 +3,8 @@ const express = require('express');
 const Users = require('../models/user-model.js');
 const bcrypt = require('bcryptjs')
 const restricted = require('../auth/restricted')
+const jwt = require('jsonwebtoken')
+const {jwtSecret} = require('../auth/secrets')
 
 const router = express.Router();
 
@@ -21,25 +23,35 @@ router.post('/login', (req, res) => {
   Users.findBy({username})
     .then(user => {
       if (user && bcrypt.compareSync(password, user.password)) {
+
+        /* JWT auth */
+        // const token = generateToken(user)
+
+        /*For part 2 session*/
         req.session.user=user
-        res.status(200).json({ message: `Welcome ${user.username}!` });
+
+        res.status(200).json({ message: `Welcome ${user.username}!`, token: token });
       } else {
         res.status(401).json({ message: 'You shall not pass!' });
       }
     })
     .catch(err => {
-      res.status(500).json({message: 'could not find user', error: err});
+      res.status(500).json({message: 'failed to sign in', error: err});
     });
 }); 
 
-router.get('/logout', restricted,(req, res) => {
-  req.session.destroy(err => {
-    if(err) {
-      res.json({ message: 'could not logout', error: err})
-    }
-    else
-      res.status(200).json({message: `Logout success`})
-  })
+router.get('/logout',(req, res) => {
+  if(req.session)
+    req.session.destroy(err => {
+      if(err) {
+        res.json({ message: 'could not logout', error: err})
+      }
+      else
+        res.status(200).json({message: `Logout success`})
+    })
+  else {
+    res.status(400).json({message: 'Cannot logout. not currently logged in'})
+  }
 })
 
 router.post('/register', verifyNewUser, async (req, res) => {
@@ -106,6 +118,19 @@ function verifyNewUser(req, res, next) {
   else 
   res.status(400).json({message: 'username and password fields required'})
     
+}
+
+/* used for token auth */
+function generateToken(user) {
+  const payload = {
+    subject: user.id, //subject is renamed as sub when produced
+    username: user.username
+  }
+  const secret = jwtSecret
+  const options = {
+    expiresIn: '1h'
+  }
+  return jwt.sign(payload, secret, options)
 }
 
 module.exports = router
