@@ -58,4 +58,15 @@ router.post('/register', async (req, res) => {
     }
 })
 
+router.delete('/users/:id', restricted, (req, res)=> {
+  const {id} = req.params
+  Users.remove(id)
+    .then(promise => {
+      res.status(200).json(promise)
+    })
+    .catch( err=> {
+      res.status(501).json({message: 'could not delete user', error: err})
+    })
+})
+
 module.exports = router

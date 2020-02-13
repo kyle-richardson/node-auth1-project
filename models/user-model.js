@@ -6,7 +6,8 @@ module.exports = {
   getUsers,
   findBy,
   // findByUser,
-  add
+  add,
+  remove
 };
 
 function getUsers() {
@@ -28,10 +29,17 @@ function findBy(filter) {
 // }
 
 function add(user) {
-    return db('users')
-      .insert(user, 'id')
-      .then(ids => {
-        const [id] = ids;
-        return findBy({id});
-      });
-  }
+  return db('users')
+    .insert(user, 'id')
+    .then(ids => {
+      const [id] = ids;
+      return findBy({id});
+    });
+}
+
+function remove(userId) {
+  return db('users')
+    .where('users.id', userId)
+    .del()
+}
+
