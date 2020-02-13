@@ -37,9 +37,15 @@ function add(user) {
     });
 }
 
-function remove(userId) {
-  return db('users')
+async function remove(userId) {
+  const userToDelete = await findBy({id: userId})
+  return await db('users')
     .where('users.id', userId)
     .del()
+    .then(prom => {
+      if(prom===1)
+        return userToDelete
+      else return prom
+    })
 }
 
